@@ -41,7 +41,7 @@ android:
 addons:
   apt:
     packages:
-    - ccach
+    - ccache
 
 cache:
   directories:
