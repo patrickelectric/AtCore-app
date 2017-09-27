@@ -1,0 +1,119 @@
+# if you update this file, please consider updating Vagrantfile too
+
+language: cpp
+
+env:
+  global:
+    - CCACHE_CPP2=1
+    - CCACHE_DISABLE=1
+    - JOBS=4
+    - QT_FATAL_WARNINGS=1
+    - SHADOW_BUILD_DIR=/tmp/shadow_build_dir
+
+matrix:
+    fast_finish: true
+    include:
+        - os: linux
+          dist: trusty
+          env: SPEC=linux-g++-64
+          sudo: required
+        - os: android
+          language: android
+          env: SPEC=android-g++
+          sudo: false
+
+jdk:
+  - oraclejdk8
+
+android:
+  components:
+    - tools
+    - platform-tools
+    - extra
+    - build-tools-26.0.1
+    - android-26
+  licenses:
+    - 'android-sdk-license-.+'
+    - 'google-gdk-license-.+'
+    - 'android-sdk-preview-license-.+'
+    - 'android-.*'
+
+addons:
+  apt:
+    packages:
+    - ccach
+
+cache:
+  directories:
+    - $HOME/.ccache
+
+before_install:
+  # compile threads
+  - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
+        export JOBS=$((`cat /proc/cpuinfo | grep -c ^processor`+1));
+    fi
+  - if [ "${SPEC}" = "android-g++" ]; then
+        wget https://dl.google.com/android/repository/android-ndk-r15c-linux-x86_64.zip > /dev/null &&
+        mkdir -p /usr/local/android-sdk/ndk-bundle &&
+        unzip android-ndk-r15c-linux-x86_64.zip -d /usr/local/android-sdk/ndk-bundle > /dev/null &&
+        export ANDROID_NDK_ROOT="/usr/local/android-sdk/ndk-bundle/android-ndk-r15c" &&
+        rm -Rf "${ANDROID_HOME}/cmake"
+    fi
+
+install:
+  # linux dependencies: qt
+  - if [ "${SPEC}" = "linux-g++-64" ]; then
+        wget --quiet https://s3-us-west-2.amazonaws.com/qgroundcontrol/dependencies/Qt5.9.1-linux-min.tar.bz2 &&
+        tar jxf Qt5.9.1-linux-min.tar.bz2 -C /tmp &&
+        export PATH=/tmp/Qt5.9-linux/5.9.1/gcc_64/bin:$PATH &&
+        export DISPLAY=:99.0 &&
+        sh -e /etc/init.d/xvfb start
+        ;
+    fi
+
+  # android dependencies: qt, android-ndk
+  - if [ "${SPEC}" = "android-g++" ]; then
+        wget --quiet https://s3-us-west-2.amazonaws.com/qgroundcontrol/dependencies/Qt5.9.1-android-min.tar.bz2 &&
+        tar jxf Qt5.9.1-android-min.tar.bz2 -C /tmp &&
+        export ANDROID_SDK_ROOT=/usr/local/android-sdk &&
+        export PATH=/tmp/Qt5.9-android/5.9.1/android_armv7/bin:$ANDROID_NDK_ROOT:$PATH && echo $PATH
+        ;
+    fi
+
+before_script:
+  - cd ${TRAVIS_BUILD_DIR}
+
+  # switch android config from installer to release if the android storepass isn't available
+  - if [[ "${SPEC}" = "android-g++" && "${CONFIG}" = "installer" && -z ${ANDROID_STOREPASS} ]]; then
+        export CONFIG=release;
+    fi
+
+  # insert QGC version in AndroidManifest.xml
+  - if [ "${SPEC}" = "android-g++" ]; then
+        git remote set-branches origin 'master' &&
+        git fetch --tags origin master &&
+        ./tools/update_android_version.sh;
+    fi
+
+script:
+  # run cmake
+  - mkdir ${SHADOW_BUILD_DIR} && cd ${SHADOW_BUILD_DIR}
+  - export ANDROID_NDK=/opt/android-ndk/
+  - export ANDROID_SDK_ROOT=/opt/android-sdk/
+  - export Qt5_android=/opt/android-qt5/5.9.1/armeabi/
+  - export PATH=/opt/android-sdk/platform-tools/:$PATH
+  - export ANT=/usr/bin/ant
+  - export JAVA_HOME=/usr/lib/jvm/java-8-openjdk/
+
+   -cmake .. \
+    DCMAKE_TOOLCHAIN_FILE=/usr/share/ECM/toolchain/Android.cmake \
+    DCMAKE_MODULE_PATH=/usr/local/Qt-5.9.2/lib/cmake/ \
+    DCMAKE_INSTALL_PREFIX=/mnt/hd/kirigami-install/ \
+    DECM_DIR=/usr/share/ECM/cmake/ \
+    DCMAKE_SYSTEM_NAME="Android" \
+    DCMAKE_ANDROID_NDK=$ANDROID_NDK \
+    DQt5_DIR=/usr/local/Qt-5.9.2/lib/cmake/Qt5/ \
+    DQt5Core_DIR=/usr/local/Qt-5.9.2/lib/cmake/Qt5Core/ \
+    DQt5Test_DIR=/usr/local/Qt-5.9.2/lib/cmake/Qt5Test/
+
+
