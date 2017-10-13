@@ -89,11 +89,11 @@ before_script:
     fi
 
   # insert QGC version in AndroidManifest.xml
-  - if [ "${SPEC}" = "android-g++" ]; then
-        git remote set-branches origin 'master' &&
-        git fetch --tags origin master &&
-        ./tools/update_android_version.sh;
-    fi
+  #- if [ "${SPEC}" = "android-g++" ]; then
+  #   git remote set-branches origin 'master' &&
+  #   git fetch --tags origin master &&
+  #   ./tools/update_android_version.sh;
+  #  fi
 
 script:
   # run cmake
