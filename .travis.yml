@@ -107,6 +107,7 @@ script:
   - pwd
   - find .
   - mkdir ${SHADOW_BUILD_DIR} && cd ${SHADOW_BUILD_DIR}
+  - pwd
   - export ANDROID_NDK=$ANDROID_NDK_ROOT
   #- export ANDROID_SDK_ROOT=/opt/android-sdk/
   - export ANDROID_SDK_ROOT=/usr/local/android-sdk/
