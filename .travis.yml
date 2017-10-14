@@ -99,6 +99,7 @@ before_script:
 
 script:
   # run cmake
+  - ls
   - mkdir ${SHADOW_BUILD_DIR} && cd ${SHADOW_BUILD_DIR}
   - export ANDROID_NDK=$ANDROID_NDK_ROOT
   #- export ANDROID_SDK_ROOT=/opt/android-sdk/
@@ -108,6 +109,7 @@ script:
   - export PATH=/opt/android-sdk/platform-tools/:$PATH
   - export ANT=/usr/bin/ant
   - export JAVA_HOME=/usr/lib/jvm/java-8-openjdk/
+  - ls ..
   - cmake .. \
     DCMAKE_TOOLCHAIN_FILE=/usr/share/ECM/toolchain/Android.cmake \
     DCMAKE_MODULE_PATH=/usr/local/Qt-5.9.2/lib/cmake/ \
