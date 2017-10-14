@@ -117,7 +117,7 @@ script:
   - export ANT=/usr/bin/ant
   - export JAVA_HOME=/usr/lib/jvm/java-8-openjdk/
   - ls ..
-  - cmake .. \
+  - cmake /home/travis/build/patrickelectric/AtCore-app/ \
     -DCMAKE_TOOLCHAIN_FILE=/usr/share/ECM/toolchain/Android.cmake \
     -DCMAKE_MODULE_PATH=/usr/local/Qt-5.9.2/lib/cmake/ \
     -DCMAKE_INSTALL_PREFIX=/mnt/hd/kirigami-install/ \
