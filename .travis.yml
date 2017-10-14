@@ -98,14 +98,13 @@ before_script:
 
 script:
   # run cmake
-  - find / android-ndk
-  - find / android-sdk
-  - find / qt5
-  - find / platform-tools
+  - find / -name android-ndk
+  - find / -name android-sdk
+  - find / -name qt5
+  - find / -name platform-tools
   - ls /usr/bin/ant
-  - find / openjdk
+  - find / -name openjdk
   - echo "------------------------------------------"
-  - find /
   - mkdir ${SHADOW_BUILD_DIR} && cd ${SHADOW_BUILD_DIR}
   - export ANDROID_NDK=/opt/android-ndk/
   - export ANDROID_SDK_ROOT=/opt/android-sdk/
