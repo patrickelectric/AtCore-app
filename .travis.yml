@@ -111,14 +111,14 @@ script:
   - export JAVA_HOME=/usr/lib/jvm/java-8-openjdk/
   - ls ..
   - cmake .. \
-    DCMAKE_TOOLCHAIN_FILE=/usr/share/ECM/toolchain/Android.cmake \
-    DCMAKE_MODULE_PATH=/usr/local/Qt-5.9.2/lib/cmake/ \
-    DCMAKE_INSTALL_PREFIX=/mnt/hd/kirigami-install/ \
-    DECM_DIR=/usr/share/ECM/cmake/ \
-    DCMAKE_SYSTEM_NAME="Android" \
-    DCMAKE_ANDROID_NDK=$ANDROID_NDK \
-    DQt5_DIR=/usr/local/Qt-5.9.2/lib/cmake/Qt5/ \
-    DQt5Core_DIR=/usr/local/Qt-5.9.2/lib/cmake/Qt5Core/ \
-    DQt5Test_DIR=/usr/local/Qt-5.9.2/lib/cmake/Qt5Test/
+    -DCMAKE_TOOLCHAIN_FILE=/usr/share/ECM/toolchain/Android.cmake \
+    -DCMAKE_MODULE_PATH=/usr/local/Qt-5.9.2/lib/cmake/ \
+    -DCMAKE_INSTALL_PREFIX=/mnt/hd/kirigami-install/ \
+    -DECM_DIR=/usr/share/ECM/cmake/ \
+    -DCMAKE_SYSTEM_NAME="Android" \
+    -DCMAKE_ANDROID_NDK=$ANDROID_NDK \
+    -DQt5_DIR=/usr/local/Qt-5.9.2/lib/cmake/Qt5/ \
+    -DQt5Core_DIR=/usr/local/Qt-5.9.2/lib/cmake/Qt5Core/ \
+    -DQt5Test_DIR=/usr/local/Qt-5.9.2/lib/cmake/Qt5Test/
 
 
