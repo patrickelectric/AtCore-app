@@ -13,10 +13,10 @@ env:
 matrix:
     fast_finish: true
     include:
-        - os: linux
-          dist: trusty
-          env: SPEC=linux-g++-64
-          sudo: required
+        #- os: linux
+         # dist: trusty
+          #env: SPEC=linux-g++-64
+          #sudo: required
         - os: android
           language: android
           env: SPEC=android-g++
