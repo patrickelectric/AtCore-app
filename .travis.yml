@@ -21,7 +21,6 @@ matrix:
           language: android
           env: SPEC=android-g++
           sudo: false
-          install: ant deps
 
 jdk:
   - oraclejdk8
